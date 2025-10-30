@@ -2,24 +2,41 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // First, create the roles and permissions
+        $this->call([
+            RoleSeeder::class,
+        ]);
 
-        User::factory()->create([
+        // Then create your test user
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Assign a role to the test user (e.g., SuperAdmin)
+        $user->assignRole('SuperAdmin');
+
+        // You can create more test users with different roles
+        $schoolAdmin = User::factory()->create([
+            'name' => 'School Admin',
+            'email' => 'schooladmin@example.com',
+        ]);
+        $schoolAdmin->assignRole('SchoolAdmin');
+
+        $teacher = User::factory()->create([
+            'name' => 'Teacher User',
+            'email' => 'teacher@example.com',
+        ]);
+        $teacher->assignRole('Teacher');
+
+        // Uncomment if you want to create multiple users
+        // User::factory(10)->create();
     }
 }
